@@ -3,16 +3,17 @@ lib := libfs.a
 
 # Target files of library
 parts := \
-	disk \
-	fs
+	disk.o \
+	fs.o
+src := $(patsubst %.x,%.o,$(parts))
 
-all: $(lib) $(parts).o
+all: $(lib) $(parts)
 
-$(parts).o: $(parts).c
-	gcc -c -Wall -Werror $(parts).c
+$(parts): $(src)
+	gcc -c -Wall -Werror $(src)
 
-$(lib): $(parts).o
-	ar rcs $(lib) $(parts).o
+$(lib): $(parts)
+	ar rcs $(lib) $(parts)
 
 clean:
 	rm *.o *.a
