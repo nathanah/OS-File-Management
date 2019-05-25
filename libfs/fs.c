@@ -8,6 +8,25 @@
 #include "fs.h"
 
 /* TODO: Phase 1 */
+typedef struct superblock{
+    uint64_t signature;
+    uint16_t total_blocks;
+    uint16_t root_index;
+    uint16_t data_index;
+    uint16_t data_blocks;
+    uint8_t FAT_blocks;
+    uint8_t padding [4079];
+}__attribute__((__packed__)) superblock;
+
+typedef uint16_t* FAT;
+
+typedef struct root_dir {
+    uint8_t filename[16];
+    uint32_t filesize;
+    uint16_t first_data_index;
+    uint8_t padding[10]
+}__attribute__((__packed__)) root_dir;
+
 
 int fs_mount(const char *diskname)
 {
@@ -68,4 +87,3 @@ int fs_read(int fd, void *buf, size_t count)
 {
 	/* TODO: Phase 4 */
 }
-
