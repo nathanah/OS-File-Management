@@ -57,22 +57,22 @@ int fs_mount(const char *diskname)
   }
 
   //Create the FAT
-  the_fat = (uint16_t*)malloc(data_blocks*sizeof(uint16_t));
+  the_fat = (uint16_t*)malloc(super_block.data_blocks*sizeof(uint16_t));
   if (the_fat == NULL) {
     return -1;
   }
-  for (int i = 1; i < super_block.root_index, i++) {
+  for (int i = 1; i < super_block.root_index; i++) {
     block_read(i, ((void*)the_fat) + BLOCK_SIZE * (i - 1));
   }
 
   //Create root array + check if disk can be read
-  root_dir_array = malloc(FS_FILE_MAX_COUNT * sizeof(root_dir));
+  root_dir_array = (root_dir *)malloc(FS_FILE_MAX_COUNT * sizeof(root_dir));
   if (block_read(super_block.root_index, (void*) root_dir_array) == -1) {
     return -1;
   }
 
   // Set boolean holder to true
-  mounted = true;
+  //mounted = true;
 
   return 0;
 }
@@ -90,9 +90,7 @@ int fs_umount(void)
 int fs_info(void)
 {
 	/* TODO: Phase 1 */
-  char * str;
-  itoa(super_block.signature, str, 16);
-  printf("signature:    %s\n", str);
+  printf("signature:    %d\n", super_block.signature);
   printf("total_blocks: %d\n", super_block.total_blocks);
   printf("root_index:   %d\n", super_block.root_index);
   printf("data_index:   %d\n", super_block.data_index);
