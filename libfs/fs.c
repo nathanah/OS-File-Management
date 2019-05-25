@@ -96,6 +96,7 @@ int fs_info(void)
   printf("data_index:   %d\n", super_block.data_index);
   printf("data_blocks:  %d\n", super_block.data_blocks);
   printf("FAT_blocks:   %d\n", super_block.FAT_blocks);
+  return 0;
 }
 
 int fs_create(const char *filename)
