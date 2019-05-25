@@ -11,7 +11,7 @@ all: $(lib) $(parts)
 $(parts).o: $(parts).c
 	gcc -c -Wall -Werr $(parts).c
 
-$(lib).a: $(parts).o
+$(lib): $(parts).o
 	ar rcs $(lib) $(parts).o
 
 clean:
