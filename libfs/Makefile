@@ -3,8 +3,8 @@ lib := libfs.a
 
 # Target files of library
 parts := \
-	disk.o \
-	fs.o
+	disk \
+	fs
 
 all: $(lib) $(parts)
 
