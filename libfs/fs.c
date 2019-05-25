@@ -8,7 +8,8 @@
 #include "fs.h"
 
 /* TODO: Phase 1 */
-typedef struct superblock{
+//Structures
+typedef struct superblock {
     uint64_t signature;
     uint16_t total_blocks;
     uint16_t root_index;
@@ -28,14 +29,29 @@ typedef struct root_dir {
 }__attribute__((__packed__)) root_dir;
 
 
+//Declare global vars
+typedef root *root_dir;
+root_dir root_dir_array;
+
+
 int fs_mount(const char *diskname)
 {
 	/* TODO: Phase 1 */
+  if(block_disk_open(diskname) == -1)
+    return -1;
+
+
+  return 0;
 }
 
 int fs_umount(void)
 {
 	/* TODO: Phase 1 */
+  if(block_disk_close() == -1)
+    return -1;
+
+
+  return 0;
 }
 
 int fs_info(void)
