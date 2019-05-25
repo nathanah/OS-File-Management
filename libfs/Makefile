@@ -6,10 +6,10 @@ parts := \
 	disk \
 	fs
 
-all: $(lib) $(parts)
+all: $(lib) $(parts).o
 
 $(parts).o: $(parts).c
-	gcc -c -Wall -Werr $(parts).c
+	gcc -c -Wall -Werror $(parts).c
 
 $(lib): $(parts).o
 	ar rcs $(lib) $(parts).o
