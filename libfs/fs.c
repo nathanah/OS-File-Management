@@ -18,6 +18,7 @@ typedef struct superblock {
     uint8_t FAT_blocks;
     uint8_t padding [4079];
 }__attribute__((__packed__)) superblock;
+typedef *superblock superblock;
 
 typedef uint16_t* FAT;
 
@@ -27,11 +28,12 @@ typedef struct root_dir {
     uint16_t first_data_index;
     uint8_t padding[10]
 }__attribute__((__packed__)) root_dir;
+typedef root *root_dir;
 
 
 //Declare global vars
-typedef root *root_dir;
 root_dir root_dir_array;
+superblock super_block;
 
 
 int fs_mount(const char *diskname)
@@ -72,6 +74,12 @@ int fs_umount(void)
 int fs_info(void)
 {
 	/* TODO: Phase 1 */
+  printf("signature:    %s\n", super_block.signature);
+  printf("total_blocks: %s\n", super_block.total_blocks);
+  printf("root_index:   %s\n", super_block.root_index);
+  printf("data_index:   %s\n", super_block.data_index);
+  printf("data_blocks:  %s\n", super_block.data_blocks);
+  printf("FAT_blocks:   %s\n", super_block.FAT_blocks);
 }
 
 int fs_create(const char *filename)
