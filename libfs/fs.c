@@ -30,7 +30,7 @@ typedef struct root_dir {
 
 
 //Declare global vars
-root_dir root_dir_array;
+root_dir *root_dir_array;
 superblock super_block;
 FAT the_fat = NULL;
 
@@ -90,7 +90,7 @@ int fs_umount(void)
 int fs_info(void)
 {
 	/* TODO: Phase 1 */
-  printf("signature:    %d\n", super_block.signature);
+  printf("signature:    %ld\n", super_block.signature);
   printf("total_blocks: %d\n", super_block.total_blocks);
   printf("root_index:   %d\n", super_block.root_index);
   printf("data_index:   %d\n", super_block.data_index);
