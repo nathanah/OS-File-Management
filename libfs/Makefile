@@ -5,7 +5,7 @@ lib := libfs.a
 parts := \
 	disk.o \
 	fs.o
-src := $(patsubst %.x,%.o,$(parts))
+src := $(patsubst %.o,%.c,$(parts))
 
 all: $(lib) $(parts)
 
