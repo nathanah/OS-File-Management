@@ -37,8 +37,23 @@ root_dir root_dir_array;
 int fs_mount(const char *diskname)
 {
 	/* TODO: Phase 1 */
-  if(block_disk_open(diskname) == -1)
+  //Open disk, ret -1 if no disk to open
+  if(block_disk_open(diskname) == -1) {
     return -1;
+  }
+
+  //Read block
+  block_read (0, (void*) &super_block);
+
+  //Check signature
+  if(super_block.signature != "ECS150FS") {
+    return -1;
+  }
+
+  //Check block count
+  if (super_block.total_blocks != block_disk_count()) {
+    return -1;
+  }
 
 
   return 0;
