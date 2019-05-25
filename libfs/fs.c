@@ -53,10 +53,27 @@ int fs_mount(const char *diskname)
   }
 
   //Check block count
-  if (super_block.total_blocks != block_disk_count()) {
+  if (super_block.num_total_blocks != block_disk_count()) {
     return -1;
   }
 
+  //Create the FAT
+  the_fat = (uint16_t*)malloc(num_data_blocks*sizeof(uint16_t));
+  if (the_fat == NULL) {
+    return -1;
+  }
+  for (int i = 1; i < superblock->root_index, i++) {
+    block_read(i, ((void*)the_fat) + BLOCK_SIZE * (i - 1));
+  }
+
+  //Create root array + check if disk can be read
+  root_dir_array = malloc(FS_FILE_MAX_COUNT * sizeof(root))
+  if (block_read(super_block.root_index, (void*) root_dir_array) == -1) {
+    return -1;
+  }
+
+  // Set boolean holder to true
+  mounted = true;
 
   return 0;
 }
