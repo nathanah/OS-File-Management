@@ -18,7 +18,6 @@ typedef struct superblock {
     uint8_t FAT_blocks;
     uint8_t padding [4079];
 }__attribute__((__packed__)) superblock;
-typedef *superblock superblock;
 
 typedef uint16_t* FAT;
 
@@ -26,15 +25,14 @@ typedef struct root_dir {
     uint8_t filename[16];
     uint32_t filesize;
     uint16_t first_data_index;
-    uint8_t padding[10]
+    uint8_t padding[10];
 }__attribute__((__packed__)) root_dir;
-typedef root *root_dir;
 
 
 //Declare global vars
 root_dir root_dir_array;
 superblock super_block;
-
+FAT the_fat = NULL;
 
 int fs_mount(const char *diskname)
 {
@@ -48,26 +46,27 @@ int fs_mount(const char *diskname)
   block_read (0, (void*) &super_block);
 
   //Check signature
-  if(super_block.signature != "ECS150FS") {
+  char* sigHolder = "ECS150FS";
+  if(memcmp((char*) &super_block.signature, sigHolder, 8) != 0) {
     return -1;
   }
 
   //Check block count
-  if (super_block.num_total_blocks != block_disk_count()) {
+  if (super_block.total_blocks != block_disk_count()) {
     return -1;
   }
 
   //Create the FAT
-  the_fat = (uint16_t*)malloc(num_data_blocks*sizeof(uint16_t));
+  the_fat = (uint16_t*)malloc(data_blocks*sizeof(uint16_t));
   if (the_fat == NULL) {
     return -1;
   }
-  for (int i = 1; i < superblock->root_index, i++) {
+  for (int i = 1; i < super_block.root_index, i++) {
     block_read(i, ((void*)the_fat) + BLOCK_SIZE * (i - 1));
   }
 
   //Create root array + check if disk can be read
-  root_dir_array = malloc(FS_FILE_MAX_COUNT * sizeof(root))
+  root_dir_array = malloc(FS_FILE_MAX_COUNT * sizeof(root_dir));
   if (block_read(super_block.root_index, (void*) root_dir_array) == -1) {
     return -1;
   }
@@ -91,55 +90,66 @@ int fs_umount(void)
 int fs_info(void)
 {
 	/* TODO: Phase 1 */
-  printf("signature:    %s\n", super_block.signature);
-  printf("total_blocks: %s\n", super_block.total_blocks);
-  printf("root_index:   %s\n", super_block.root_index);
-  printf("data_index:   %s\n", super_block.data_index);
-  printf("data_blocks:  %s\n", super_block.data_blocks);
-  printf("FAT_blocks:   %s\n", super_block.FAT_blocks);
+  char * str;
+  itoa(super_block.signature, str, 16);
+  printf("signature:    %s\n", str);
+  printf("total_blocks: %d\n", super_block.total_blocks);
+  printf("root_index:   %d\n", super_block.root_index);
+  printf("data_index:   %d\n", super_block.data_index);
+  printf("data_blocks:  %d\n", super_block.data_blocks);
+  printf("FAT_blocks:   %d\n", super_block.FAT_blocks);
 }
 
 int fs_create(const char *filename)
 {
 	/* TODO: Phase 2 */
+  return 0;
 }
 
 int fs_delete(const char *filename)
 {
 	/* TODO: Phase 2 */
+  return 0;
 }
 
 int fs_ls(void)
 {
 	/* TODO: Phase 2 */
+  return 0;
 }
 
 int fs_open(const char *filename)
 {
 	/* TODO: Phase 3 */
+  return 0;
 }
 
 int fs_close(int fd)
 {
 	/* TODO: Phase 3 */
+  return 0;
 }
 
 int fs_stat(int fd)
 {
 	/* TODO: Phase 3 */
+  return 0;
 }
 
 int fs_lseek(int fd, size_t offset)
 {
 	/* TODO: Phase 3 */
+  return 0;
 }
 
 int fs_write(int fd, void *buf, size_t count)
 {
 	/* TODO: Phase 4 */
+  return 0;
 }
 
 int fs_read(int fd, void *buf, size_t count)
 {
 	/* TODO: Phase 4 */
+  return 0;
 }
