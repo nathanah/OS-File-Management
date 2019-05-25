@@ -8,14 +8,11 @@ parts := \
 
 all: $(lib) $(parts)
 
-disk.o: disk.c
-	gcc -c -Wall -Werror disk.c
+$(parts).o: $(parts).c
+	gcc -c -Wall -Werr $(parts).c
 
-fs.o: fs.c
-	gcc -c -Wall -Werror fs.c
-
-libfs.a: disk.o fs.o
-	ar rcs $(lib) disk.o fs.o
+$(lib).a: $(parts).o
+	ar rcs $(lib) $(parts).o
 
 clean:
 	rm *.o *.a
