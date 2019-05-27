@@ -10,7 +10,7 @@
 /* TODO: Phase 1 */
 //Structures
 typedef struct superblock {
-    uint64_t signature;
+    char signature[8];
     uint16_t total_blocks;
     uint16_t root_index;
     uint16_t data_index;
@@ -90,12 +90,12 @@ int fs_umount(void)
 int fs_info(void)
 {
 	/* TODO: Phase 1 */
-  printf("signature:    %ld\n", super_block.signature);
+  printf("signature:    %s\n", super_block.signature);
   printf("total_blocks: %d\n", super_block.total_blocks);
+  printf("FAT_blocks:   %d\n", super_block.FAT_blocks);
   printf("root_index:   %d\n", super_block.root_index);
   printf("data_index:   %d\n", super_block.data_index);
   printf("data_blocks:  %d\n", super_block.data_blocks);
-  printf("FAT_blocks:   %d\n", super_block.FAT_blocks);
   return 0;
 }
 
