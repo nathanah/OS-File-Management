@@ -80,7 +80,18 @@ int fs_mount(const char *diskname)
 
 int fs_umount(void)
 {
-	/* TODO: Phase 1 */
+  /* TODO: Phase 1 */
+  //Write fat back to disk
+  for(int i = 1; i < super_block.root_index; i++){
+    FAT buffer;
+    memcpy(buffer, the_fat + (i-1)*BLOCK_SIZE, BLOCK_SIZE);
+    block_write(i, buffer);
+  }
+
+  //Write root dir back to disk
+  block_write(super_block.root_index, root_dir_array);
+
+  //close disk (-1 if no disk opened)
   if(block_disk_close() == -1)
     return -1;
 
