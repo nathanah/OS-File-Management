@@ -7,6 +7,8 @@
 #include "disk.h"
 #include "fs.h"
 
+#define FAT_EOC 0xFFFF
+
 /* TODO: Phase 1 */
 //Structures
 typedef struct superblock {
