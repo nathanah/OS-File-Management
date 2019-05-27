@@ -84,11 +84,12 @@ int fs_umount(void)
 {
   /* TODO: Phase 1 */
   //Write fat back to disk
+  FAT buffer = (FAT)malloc(BLOCK_SIZE);
   for(int i = 1; i < super_block.root_index; i++){
-    FAT buffer;
     memcpy(buffer, the_fat + (i-1)*BLOCK_SIZE, BLOCK_SIZE);
     block_write(i, buffer);
   }
+  free(buffer);
 
   //Write root dir back to disk
   block_write(super_block.root_index, root_dir_array);
