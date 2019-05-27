@@ -204,10 +204,10 @@ int fs_ls(void)
   }
 
   //Handle LS Print statements
-  printf("LS:");
+  printf("FS Ls:\n");
   for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
     if (root_dir_array[i].filename[0] != '\0')
-      printf("\nFile: %s, size: %d, data_blk: %d", root_dir_array[i].filename, root_dir_array[i].filesize, root_dir_array[i].first_data_index);
+      printf("File: %s, size: %d, data_blk: %d\n", root_dir_array[i].filename, root_dir_array[i].filesize, root_dir_array[i].first_data_index);
   }
   return 0;
 }
