@@ -59,7 +59,7 @@ int fs_mount(const char *diskname)
   }
 
   //Create the FAT
-  the_fat = (uint16_t*)malloc(super_block.data_blocks*sizeof(uint16_t));
+  the_fat = (uint16_t*)malloc(super_block.FAT_blocks*BLOCK_SIZE);
   if (the_fat == NULL) {
     return -1;
   }
