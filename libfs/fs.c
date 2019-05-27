@@ -101,15 +101,37 @@ int fs_umount(void)
   return 0;
 }
 
+
+
+
 int fs_info(void)
 {
 	/* TODO: Phase 1 */
-  printf("signature:    %s\n", super_block.signature);
-  printf("total_blocks: %d\n", super_block.total_blocks);
-  printf("FAT_blocks:   %d\n", super_block.FAT_blocks);
-  printf("root_index:   %d\n", super_block.root_index);
-  printf("data_index:   %d\n", super_block.data_index);
-  printf("data_blocks:  %d\n", super_block.data_blocks);
+
+  int fat_empty_blocks = 0;
+  int root_empty_files = 0;
+  //Find empty blocks in FAT
+  for(int i = 0; i < super_block.data_blocks; i++){
+      if(the_fat[i] == 0){
+        fat_empty_blocks++;
+      }
+  }
+
+  //Find empty files in root_dir
+  for(int i = 0; i < FS_FILE_MAX_COUNT; i++){
+      if(root_dir_array[i].filename[0] == '\0'){
+        root_empty_files++;
+      }
+  }
+
+  printf("FS Info:\n");
+  printf("total_blk_count=%d\n", super_block.total_blocks);
+  printf("fat_blk_count=%d\n", super_block.FAT_blocks);
+  printf("rdir_blk=%d\n", super_block.root_index);
+  printf("data_blk=%d\n", super_block.data_index);
+  printf("data_blk_count=%d\n", super_block.data_blocks);
+  printf("fat_free_ratio=%d/%d\n", fat_empty_blocks,super_block.data_blocks);
+  printf("rdir_free_ratio=%d/%d\n", root_empty_files,FS_FILE_MAX_COUNT);
   return 0;
 }
 
