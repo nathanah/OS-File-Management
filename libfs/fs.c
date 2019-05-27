@@ -83,6 +83,8 @@ int fs_umount(void)
   if(block_disk_close() == -1)
     return -1;
 
+  free(the_fat);
+  free(root_dir_array);
 
   return 0;
 }
