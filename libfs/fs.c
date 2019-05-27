@@ -61,12 +61,13 @@ int fs_mount(const char *diskname)
   if (the_fat == NULL) {
     return -1;
   }
+
   for (int i = 1; i < super_block.root_index; i++) {
     block_read(i, ((void*)the_fat) + BLOCK_SIZE * (i - 1));
   }
 
   //Create root array + check if disk can be read
-  root_dir_array = (root_dir *)malloc(FS_FILE_MAX_COUNT * sizeof(root_dir));
+  root_dir_array = (root_dir*)malloc(FS_FILE_MAX_COUNT * sizeof(root_dir));
   if (block_read(super_block.root_index, (void*) root_dir_array) == -1) {
     return -1;
   }
@@ -104,6 +105,9 @@ int fs_info(void)
 int fs_create(const char *filename)
 {
 	/* TODO: Phase 2 */
+  //Helper Variable for checking if the root is full
+  int count = 0;
+
   //Error checking: Filename is Null or if it is longer than 16)
   if (filename == NULL) {
     return -1;
@@ -111,7 +115,29 @@ int fs_create(const char *filename)
   if (strlen(filename) + 1 > FS_FILENAME_LEN) {
     return -1;
   }
+
+  // Loop into our Root_dir array
   for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
+
+    //Checks for first file that is empty
+    if(root_dir_array[i].filename[0] == '\0') {
+      strcpy((char*) root_dir_array.filename , filename);
+      root_dir_array[i].filesize = 0;
+      root_dir_array[i].first_data_index = FAT_EOC;
+    }
+
+    //If it is not empty, ensure that our filename does not already exist
+    else {
+      if (strcmp((char*)root_dir_array[i].filename, filename) == 0) {
+        return -1;
+      }
+    }
+    count++;
+  }
+
+  //If our Root_dir is full, error.
+  if (count == FS_FILE_MAX_COUNT) {
+    return -1;
   }
   return 0;
 }
