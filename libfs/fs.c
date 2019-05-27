@@ -104,6 +104,15 @@ int fs_info(void)
 int fs_create(const char *filename)
 {
 	/* TODO: Phase 2 */
+  //Error checking: Filename is Null or if it is longer than 16)
+  if (filename == NULL) {
+    return -1;
+  }
+  if (strlen(filename) + 1 > FS_FILENAME_LEN) {
+    return -1;
+  }
+  for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
+  }
   return 0;
 }
 
