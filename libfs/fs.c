@@ -7,8 +7,6 @@
 #include "disk.h"
 #include "fs.h"
 
-#define FAT_EOC 0xFFFF
-
 /* TODO: Phase 1 */
 //Structures
 typedef struct superblock {
@@ -148,6 +146,26 @@ int fs_create(const char *filename)
 int fs_delete(const char *filename)
 {
 	/* TODO: Phase 2 */
+  // Loop through Root_dir array
+  for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
+
+    //If file name matches
+    if(strcmp(root_dir_array[i].filename, filename) == 0) {
+
+      //Delete from FAT
+      uint16_t index = root_dir_array[i].first_data_index;
+      while(index != FAT_EOC){
+        uint16_t next = fat[index];
+        fat[index] = 0;
+        index = next;
+      }
+
+      //Delete from root_dir
+      root_dir_array[i].filename[0] = '\0';
+    }
+  }
+
+
   return 0;
 }
 
