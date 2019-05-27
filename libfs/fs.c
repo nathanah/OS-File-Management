@@ -116,14 +116,9 @@ int fs_info(void)
 int fs_create(const char *filename)
 {
 	/* TODO: Phase 2 */
-  //Helper Variable for checking if the root is full
-  int count = 0;
 
-  //Error checking: Filename is Null or if it is longer than 16)
-  if (filename == NULL) {
-    return -1;
-  }
-  if (strlen(filename) + 1 > FS_FILENAME_LEN) {
+  //Error checking: Filename is NULL or if it is longer than 16)
+  if (filename == NULL || strlen(filename) + 1 > FS_FILENAME_LEN) {
     return -1;
   }
 
@@ -135,22 +130,17 @@ int fs_create(const char *filename)
       strcpy((char*) root_dir_array.filename , filename);
       root_dir_array[i].filesize = 0;
       root_dir_array[i].first_data_index = FAT_EOC;
+      return 0;
     }
 
     //If it is not empty, ensure that our filename does not already exist
-    else {
-      if (strcmp((char*)root_dir_array[i].filename, filename) == 0) {
-        return -1;
-      }
+    else if (strcmp((char*)root_dir_array[i].filename, filename) == 0) {
+      return -1;
     }
-    count++;
   }
 
   //If our Root_dir is full, error.
-  if (count == FS_FILE_MAX_COUNT) {
-    return -1;
-  }
-  return 0;
+  return -1;
 }
 
 int fs_delete(const char *filename)
