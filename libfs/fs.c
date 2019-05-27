@@ -138,7 +138,7 @@ int fs_info(void)
 int fs_create(const char *filename)
 {
 	/* TODO: Phase 2 */
-
+  // TODO: Maybe fd needs this
   //Error checking: Filename is NULL or if it is longer than 16)
   if (filename == NULL || strlen(filename) + 1 > FS_FILENAME_LEN) {
     return -1;
@@ -168,6 +168,7 @@ int fs_create(const char *filename)
 int fs_delete(const char *filename)
 {
 	/* TODO: Phase 2 */
+  // TODO: Delete fd's later-on
   // Loop through Root_dir array
   for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
 
@@ -194,6 +195,17 @@ int fs_delete(const char *filename)
 int fs_ls(void)
 {
 	/* TODO: Phase 2 */
+  //Check for underlying virtual disk
+  if (block_disk_count() == -1) {
+    return -1;
+  }
+
+  //Handle LS Print statements
+  printf("LS:");
+  for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
+    if (root_dir_array[i].filename[0] != '\0')
+      printf("\nFile: %s, size: %d, data_blk: %d", root_dir_array[i].filename, root_dir_array[i].filesize, root_dir_array[i].first_data_index);
+  }
   return 0;
 }
 
