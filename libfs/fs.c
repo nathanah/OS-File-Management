@@ -267,6 +267,13 @@ int fs_open(const char *filename)
 int fs_close(int fd)
 {
 	/* TODO: Phase 3 */
+  // Checks if fd is in range and if file is not open
+  if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
+    return -1;
+  }
+
+  open_files[fd].root_idx = -1;
+
   return 0;
 }
 
