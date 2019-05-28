@@ -280,7 +280,12 @@ int fs_close(int fd)
 int fs_stat(int fd)
 {
 	/* TODO: Phase 3 */
-  return 0;
+  // Checks if fd is in range and if file is not open
+  if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
+    return -1;
+  }
+
+  return root_dir_array[open_files[fd].root_idx].filesize;
 }
 
 int fs_lseek(int fd, size_t offset)
