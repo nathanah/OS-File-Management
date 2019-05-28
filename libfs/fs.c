@@ -33,13 +33,14 @@ typedef struct root_dir {
 typedef struct fd {
     int root_idx;
     size_t offset;
+    char *filename;
 } fd;
 
 //Declare global vars
 root_dir *root_dir_array;
 superblock super_block;
 FAT the_fat = NULL;
-fd open_files_array[FS_OPEN_MAX_COUNT];
+fd open_files[FS_OPEN_MAX_COUNT];
 
 int fs_mount(const char *diskname)
 {
@@ -176,7 +177,13 @@ int fs_create(const char *filename)
 int fs_delete(const char *filename)
 {
 	/* TODO: Phase 2 */
-  // TODO: Delete fd's later-on
+  // Check if file is open
+  for(int i = 0; i < FS_OPEN_MAX_COUNT; i++){
+    if(strcmp(open_files[i].filename, filename) == 0){
+      return -1;
+    }
+  }
+
   // Loop through Root_dir array
   for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
 
