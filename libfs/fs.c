@@ -181,7 +181,7 @@ int fs_delete(const char *filename)
 	/* TODO: Phase 2 */
   // Check if file is open
   for(int i = 0; i < FS_OPEN_MAX_COUNT; i++){
-    if(strcmp(open_files[i].filename, filename) == 0){
+    if(strcmp((char*)open_files[i].filename, filename) == 0){
       return -1;
     }
   }
@@ -234,7 +234,7 @@ int fs_open(const char *filename)
   for (int i = 0; i < FS_OPEN_MAX_COUNT; i++) {
     if(open_files[i].root_idx == -1){
       fd_index = i;
-      open_count++;
+      //open_count++;
     }
   }
 
@@ -259,7 +259,7 @@ int fs_open(const char *filename)
 
   open_files[fd_index].root_idx = f_index;
   open_files[fd_index].offset = 0;
-  strcpy(open_files[fd_index].filename, filename);
+  strcpy((char*)open_files[fd_index].filename, filename);
 
   return fd_index;
 }
@@ -327,12 +327,12 @@ int fs_read(int fd, void *buf, size_t count)
   }
 
   int num_read = 0;
-  root_dir *this_file = root_dir_array[open_files[fd].root_idx];
+  root_dir *this_file = &root_dir_array[open_files[fd].root_idx];
 
 
   // find block of offset
-  int block_idx = this_file.first_data_index;
-  int block_offset = this_file.offset;
+  int block_idx = this_file->first_data_index;
+  int block_offset = this_file->offset;
   int block_num = 0;
   while(block_offset > BLOCK_SIZE){
     if(the_fat[block_idx] == FAT_EOC)
@@ -353,16 +353,16 @@ int fs_read(int fd, void *buf, size_t count)
     //calculate how many bytes to copy
     int end = BLOCK_SIZE;
     if(the_fat[block_idx] == FAT_EOC){
-      end = this_file.size - block_num * BLOCK_SIZE
+      end = this_file->size - block_num * BLOCK_SIZE;
     }
     int copynum = end - block_offset;
 
     // copy to buffer
-    memcpy((void*) (&buffer+num_read), (void*)(&block+block_offset), copynum);
+    memcpy((void*) (&buf+num_read), (void*)(&block+block_offset), copynum);
     num_read += copynum;
 
     // swap to next block
-    this_file.offset += copynum;
+    this_file->offset += copynum;
     block_offset = 0;
     block_idx = the_fat[block_idx];
     block_num++;
