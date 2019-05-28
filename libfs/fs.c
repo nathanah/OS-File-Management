@@ -80,8 +80,10 @@ int fs_mount(const char *diskname)
     return -1;
   }
 
-  // Set boolean holder to true
-  //mounted = true;
+  // Initialize fd array
+  for (int i = 0; i < FS_OPEN_MAX_COUNT; i++) {
+    open_files[i].root_idx = 0;
+  }
 
   return 0;
 }
