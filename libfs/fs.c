@@ -332,7 +332,7 @@ int fs_read(int fd, void *buf, size_t count)
 
   // find block of offset
   int block_idx = this_file->first_data_index;
-  int block_offset = this_file->offset;
+  int block_offset = open_files[fd].offset;
   int block_num = 0;
   while(block_offset > BLOCK_SIZE){
     if(the_fat[block_idx] == FAT_EOC)
@@ -353,7 +353,7 @@ int fs_read(int fd, void *buf, size_t count)
     //calculate how many bytes to copy
     int end = BLOCK_SIZE;
     if(the_fat[block_idx] == FAT_EOC){
-      end = this_file->size - block_num * BLOCK_SIZE;
+      end = this_file->filesize - block_num * BLOCK_SIZE;
     }
     int copynum = end - block_offset;
 
@@ -362,7 +362,7 @@ int fs_read(int fd, void *buf, size_t count)
     num_read += copynum;
 
     // swap to next block
-    this_file->offset += copynum;
+    open_files[fd].offset += copynum;
     block_offset = 0;
     block_idx = the_fat[block_idx];
     block_num++;
