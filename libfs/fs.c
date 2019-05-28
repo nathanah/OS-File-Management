@@ -308,11 +308,47 @@ int fs_lseek(int fd, size_t offset)
 int fs_write(int fd, void *buf, size_t count)
 {
 	/* TODO: Phase 4 */
+  // Checks if fd is in range and if file is not open
+  if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
+    return -1;
+  }
+
+
+
   return 0;
 }
 
 int fs_read(int fd, void *buf, size_t count)
 {
 	/* TODO: Phase 4 */
-  return 0;
+  // Checks if fd is in range and if file is not open
+  if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
+    return -1;
+  }
+
+  int num_read = 0;
+
+  // find block of offset
+  int block_idx = root_dir_array[open_files[fd].root_idx].first_data_index;
+  int block_offset = root_dir_array[open_files[fd].root_idx].offset;
+  while(block_offset > BLOCK_SIZE){
+    if(the_fat[block_idx] == FAT_EOC)
+      return 0;
+    block_offset -= BLOCK_SIZE;
+    block_idx = the_fat[block_idx];
+  }
+
+  // malloc block buffer
+  char *block = (char*)malloc(BLOCK_SIZE*sizeof(char));
+
+  // while num_read < count & 
+  while(){
+    // Read full block
+    block_read(block_idx ,(void*) &block);
+
+    // copy to buffer
+
+  }
+
+  return num_read;
 }
