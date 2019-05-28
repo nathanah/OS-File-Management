@@ -327,27 +327,45 @@ int fs_read(int fd, void *buf, size_t count)
   }
 
   int num_read = 0;
+  root_dir *this_file = root_dir_array[open_files[fd].root_idx];
+
 
   // find block of offset
-  int block_idx = root_dir_array[open_files[fd].root_idx].first_data_index;
-  int block_offset = root_dir_array[open_files[fd].root_idx].offset;
+  int block_idx = this_file.first_data_index;
+  int block_offset = this_file.offset;
+  int block_num = 0;
   while(block_offset > BLOCK_SIZE){
     if(the_fat[block_idx] == FAT_EOC)
       return 0;
     block_offset -= BLOCK_SIZE;
     block_idx = the_fat[block_idx];
+    block_num++;
   }
 
   // malloc block buffer
   char *block = (char*)malloc(BLOCK_SIZE*sizeof(char));
 
-  // while num_read < count & 
-  while(){
+  // copy from blocks while still data to copy
+  while(block_idx != FAT_EOC && num_read < count){
     // Read full block
     block_read(block_idx ,(void*) &block);
 
-    // copy to buffer
+    //calculate how many bytes to copy
+    int end = BLOCK_SIZE;
+    if(the_fat[block_idx] == FAT_EOC){
+      end = this_file.size - block_num * BLOCK_SIZE
+    }
+    int copynum = end - block_offset;
 
+    // copy to buffer
+    memcpy((void*) (&buffer+num_read), (void*)(&block+block_offset), copynum);
+    num_read += copynum;
+
+    // swap to next block
+    this_file.offset += copynum;
+    block_offset = 0;
+    block_idx = the_fat[block_idx];
+    block_num++;
   }
 
   return num_read;
