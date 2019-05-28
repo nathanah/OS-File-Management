@@ -82,7 +82,7 @@ int fs_mount(const char *diskname)
 
   // Initialize fd array
   for (int i = 0; i < FS_OPEN_MAX_COUNT; i++) {
-    open_files[i].root_idx = 0;
+    open_files[i].root_idx = -1;
   }
 
   return 0;
@@ -229,10 +229,39 @@ int fs_ls(void)
 int fs_open(const char *filename)
 {
 	/* TODO: Phase 3 */
+  int fd_index = -1;
+  // Initialize fd array
+  for (int i = 0; i < FS_OPEN_MAX_COUNT; i++) {
+    if(open_files[i].root_idx == -1){
+      fd_index = i;
+      open_count++;
+    }
+  }
+
+  // no empty fd
+  if(fd_index == -1){
+    return -1;
+  }
 
 
+  int f_index = -1;
+  // Loop through Root_dir array to find index
+  for (int i = 0; i < FS_FILE_MAX_COUNT; i++) {
+    //If file name matches
+    if(strcmp((char*) root_dir_array[i].filename, filename) == 0) {
+      f_index = i;
+    }
+  }
+  // file with filename was not found
+  if(f_index == -1){
+    return -1;
+  }
 
-  return 0;
+  open_files[fd_index].root_idx = f_index;
+  open_files[fd_index].offset = 0;
+  strcpy(open_files[fd_index].filename, filename);
+
+  return fd_index;
 }
 
 int fs_close(int fd)
