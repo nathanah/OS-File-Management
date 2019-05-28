@@ -33,7 +33,7 @@ typedef struct root_dir {
 typedef struct fd {
     int root_idx;
     size_t offset;
-    char *filename;
+    uint8_t filename[16];
 } fd;
 
 //Declare global vars
@@ -227,6 +227,9 @@ int fs_ls(void)
 int fs_open(const char *filename)
 {
 	/* TODO: Phase 3 */
+
+
+
   return 0;
 }
 
