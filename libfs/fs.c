@@ -30,11 +30,16 @@ typedef struct root_dir {
     uint8_t padding[10];
 }__attribute__((__packed__)) root_dir;
 
+typedef struct fd {
+    int root_idx;
+    size_t offset;
+} fd;
 
 //Declare global vars
 root_dir *root_dir_array;
 superblock super_block;
 FAT the_fat = NULL;
+fd open_files_array[FS_OPEN_MAX_COUNT];
 
 int fs_mount(const char *diskname)
 {
