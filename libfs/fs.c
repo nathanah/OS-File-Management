@@ -90,7 +90,7 @@ int fs_umount(void)
 {
   // Check if any files are open
   for(int i = 0; i < FS_OPEN_MAX_COUNT; i++){
-    if(open_files[i] != -1){
+    if(open_files[i].root_idx != -1){
       return -1;
     }
   }
