@@ -148,6 +148,7 @@ int fs_info(void)
 
 int fs_create(const char *filename)
 {
+printf("create\n");
 	/* TODO: Phase 2 */
   // TODO: Maybe fd needs this
   //Error checking: Filename is NULL or if it is longer than 16)
@@ -178,6 +179,7 @@ int fs_create(const char *filename)
 
 int fs_delete(const char *filename)
 {
+printf("delete\n");
 	/* TODO: Phase 2 */
   // Check if file is open
   for(int i = 0; i < FS_OPEN_MAX_COUNT; i++){
@@ -211,6 +213,7 @@ int fs_delete(const char *filename)
 
 int fs_ls(void)
 {
+printf("ls\n");
 	/* TODO: Phase 2 */
   //Check for underlying virtual disk
   if (block_disk_count() == -1) {
@@ -228,6 +231,7 @@ int fs_ls(void)
 
 int fs_open(const char *filename)
 {
+printf("open\n");
 	/* TODO: Phase 3 */
   int fd_index = -1;
   // Initialize fd array
@@ -266,6 +270,7 @@ int fs_open(const char *filename)
 
 int fs_close(int fd)
 {
+printf("close\n");
 	/* TODO: Phase 3 */
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
@@ -279,6 +284,7 @@ int fs_close(int fd)
 
 int fs_stat(int fd)
 {
+printf("stat\n");
 	/* TODO: Phase 3 */
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
@@ -291,6 +297,7 @@ int fs_stat(int fd)
 int fs_lseek(int fd, size_t offset)
 {
 	/* TODO: Phase 3 */
+  printf("lseek\n");
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
     return -1;
