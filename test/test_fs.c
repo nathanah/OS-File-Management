@@ -289,7 +289,7 @@ void thread_fs_write(void *arg){
 	source   = t_arg->argv[2];
 	long conv = strtol(t_arg->argv[3], &ptr, 10);
 
-	if (*ptr != '\0' || conv > INT_MAX) {
+	if (*ptr != '\0' || conv > INT_MAX || conv < 0) {
 			die("Offset NaN");
 	} else {
     // No error
@@ -327,7 +327,7 @@ void thread_fs_write(void *arg){
 	}
 
 
-	if(fs_lseek(fd, offset)){
+	if(!fs_lseek(fd, offset)){
 		fs_umount();
 		printf("%ld", offset);
 		die(" :Invalid offset");
