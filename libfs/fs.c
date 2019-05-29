@@ -327,6 +327,7 @@ int fs_write(int fd, void *buf, size_t count)
       // add new block to chain
       if(the_fat[i] == 0){
         this_file->first_data_index = i;
+        block_idx = i;
         the_fat[i] = FAT_EOC;
         break;
       }
