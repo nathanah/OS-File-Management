@@ -1,4 +1,4 @@
-#Phase 1
+# Phase 1
 
 For phase 1, we initialized our variables: super_block (our superblock), the_fat (which holds our array of FAT blocks), open_files (which holds our array of file descriptors), and our root_dir_array (an array to hold the different files for our root directory).
 
@@ -9,14 +9,14 @@ As for `unmount()`, there is a corner case where we do not want to end up unmoun
 For `info()`, we simply used for loops to find out how many empty fat blocks and empty files that we have in our root directory, and we used these numbers for our ratios 
 
 
-#Phase 2
+# Phase 2
 
 For `create()`, if the root directory has an empty slot, we fill it in with a file name along with its file size along with changing its first block to FAT_EOC (which is 0xFFF). We also checked to make sure that the root directory is not already full.
 
 For `delete()`, there are two important items we have to do. When we call delete, we want to make sure that our file-related file chain in the fat is set back to 0. We also want to make sure a file cannot be deleted until the file itself has no open file descriptors.
 
 
-#Phase 3
+# Phase 3
 
 For `open()`, we loop through our root_directory_array in order to find the index that holds the root_index of the file descriptor. We also initialize its offset to 0. 
 
@@ -25,4 +25,4 @@ For `close()`, if we want to close a file descriptor, we set it equal to -1.
 For `stat()` and `lseek()`, an extra corner case we checked was whether or not an open_files root index is -1, because that means that the file descriptor is closed and does not exist for us to use via seek and lseek. 
 
 
-#Phase 4
+# Phase 4
