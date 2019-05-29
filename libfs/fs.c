@@ -406,6 +406,7 @@ int fs_write(int fd, void *buf, size_t count)
         if (i == super_block.data_blocks){
           printf("no empty blocks\n");
           free(block);
+          this_file->filesize = open_files[fd].offset;
           return num_written;
         }
       }
@@ -415,6 +416,7 @@ int fs_write(int fd, void *buf, size_t count)
   }
   printf("free\n");
   free(block);
+  this_file->filesize = open_files[fd].offset;
 
     printf("returning%d\n",num_written);
   return num_written;
@@ -449,12 +451,12 @@ printf("read start\n");
   }
 
   // malloc block buffer
-  char *block = (char*)malloc(BLOCK_SIZE*sizeof(char));
+  void *block = (void*)malloc(BLOCK_SIZE);
 
   // copy from blocks while still data to copy
   while(block_idx != FAT_EOC && num_read < count){
     // Read full block
-    block_read(block_idx + super_block.data_index,(void*) &block);
+    block_read(block_idx + super_block.data_index, block);
 
     //calculate how many bytes to copy
     int end = BLOCK_SIZE - 1;
@@ -468,7 +470,7 @@ printf("read start\n");
     }
 
     // copy to buffer
-    memcpy((void*) (&buf+num_read), (void*)(&block+block_offset), copynum);
+    memcpy((void*) (buf+num_read), (void*)(block + block_offset), copynum);
     num_read += copynum;
 
     // swap to next block
