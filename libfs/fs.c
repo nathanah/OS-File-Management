@@ -362,7 +362,7 @@ int fs_write(int fd, void *buf, size_t count)
   printf("offset found\n");
 
   // malloc block buffer
-  char *block = (void*)malloc(BLOCK_SIZE*sizeof(char));
+  void *block = (void*)malloc(BLOCK_SIZE*sizeof(char));
 
   // copy from blocks while still data to write
   while(num_written < count){
