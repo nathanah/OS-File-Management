@@ -316,11 +316,28 @@ int fs_write(int fd, void *buf, size_t count)
   int num_written = 0;
   root_dir *this_file = &root_dir_array[open_files[fd].root_idx];
 
-
-  // find block of offset
   int block_idx = this_file->first_data_index;
   int block_offset = open_files[fd].offset;
   int block_num = 0;
+
+  //if no data yet
+  if(block_idx == FAT_EOC){
+    // look for empty blocks
+    for(int i = 0; i < super_block.data_blocks; i++){
+      // add new block to chain
+      if(the_fat[i] == 0){
+        this_file->first_data_index = i;
+        the_fat[i] = FAT_EOC;
+        break;
+      }
+      // if no empty blocks in FAT
+      if (i == super_block.data_blocks){
+        return 0;
+      }
+    }
+  }
+
+  // find block of offset
   while(block_offset > BLOCK_SIZE){
     if(the_fat[block_idx] == FAT_EOC)
       return 0;
@@ -393,6 +410,9 @@ int fs_read(int fd, void *buf, size_t count)
   int block_idx = this_file->first_data_index;
   int block_offset = open_files[fd].offset;
   int block_num = 0;
+  if(block_idx == FAT_EOC){
+    return 0;
+  }
   while(block_offset > BLOCK_SIZE){
     if(the_fat[block_idx] == FAT_EOC)
       return 0;
