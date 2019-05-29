@@ -122,7 +122,7 @@ int fs_info(void)
   int fat_empty_blocks = 0;
   int root_empty_files = 0;
   //Find empty blocks in FAT
-  for(int i = 0; i < super_block.data_blocks; i++){
+  for(int i = 1; i < super_block.data_blocks; i++){
       if(the_fat[i] == 0){
         fat_empty_blocks++;
       }
@@ -323,7 +323,7 @@ int fs_write(int fd, void *buf, size_t count)
   //if no data yet
   if(block_idx == FAT_EOC){
     // look for empty blocks
-    for(int i = 0; i < super_block.data_blocks; i++){
+    for(int i = 1; i < super_block.data_blocks; i++){
       // add new block to chain
       if(the_fat[i] == 0){
         this_file->first_data_index = i;
@@ -375,7 +375,7 @@ int fs_write(int fd, void *buf, size_t count)
     // test for if last block and needs to create new block
     if(the_fat[block_idx] == FAT_EOC){
       // look for empty blocks
-      for(int i = 0; i < super_block.data_blocks; i++){
+      for(int i = 1; i < super_block.data_blocks; i++){
         // add new block to chain
         if(the_fat[i] == 0){
           the_fat[block_idx] = i;
