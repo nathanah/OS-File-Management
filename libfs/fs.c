@@ -9,7 +9,6 @@
 
 #define FAT_EOC 0xFFFF
 
-/* TODO: Phase 1 */
 //Structures
 typedef struct superblock {
     char signature[8];
@@ -44,7 +43,6 @@ fd open_files[FS_OPEN_MAX_COUNT];
 
 int fs_mount(const char *diskname)
 {
-	/* TODO: Phase 1 */
   //Open disk, ret -1 if no disk to open
   if(block_disk_open(diskname) == -1) {
     return -1;
@@ -90,7 +88,6 @@ int fs_mount(const char *diskname)
 
 int fs_umount(void)
 {
-  /* TODO: Phase 1 */
   //Write fat back to disk
   FAT buffer = (FAT)malloc(BLOCK_SIZE);
   for(int i = 1; i < super_block.root_index; i++){
@@ -117,10 +114,10 @@ int fs_umount(void)
 
 int fs_info(void)
 {
-	/* TODO: Phase 1 */
 
   int fat_empty_blocks = 0;
   int root_empty_files = 0;
+
   //Find empty blocks in FAT
   for(int i = 1; i < super_block.data_blocks; i++){
       if(the_fat[i] == 0){
@@ -148,9 +145,6 @@ int fs_info(void)
 
 int fs_create(const char *filename)
 {
-printf("create\n");
-	/* TODO: Phase 2 */
-  // TODO: Maybe fd needs this
   //Error checking: Filename is NULL or if it is longer than 16)
   if (filename == NULL || strlen(filename) + 1 > FS_FILENAME_LEN) {
     return -1;
@@ -179,8 +173,6 @@ printf("create\n");
 
 int fs_delete(const char *filename)
 {
-printf("delete\n");
-	/* TODO: Phase 2 */
   // Check if file is open
   for(int i = 0; i < FS_OPEN_MAX_COUNT; i++){
     if(strcmp((char*)open_files[i].filename, filename) == 0){
@@ -207,14 +199,11 @@ printf("delete\n");
     }
   }
 
-
   return 0;
 }
 
 int fs_ls(void)
 {
-printf("ls\n");
-	/* TODO: Phase 2 */
   //Check for underlying virtual disk
   if (block_disk_count() == -1) {
     return -1;
@@ -231,8 +220,6 @@ printf("ls\n");
 
 int fs_open(const char *filename)
 {
-printf("open\n");
-	/* TODO: Phase 3 */
   int fd_index = -1;
   // Initialize fd array
   for (int i = 0; i < FS_OPEN_MAX_COUNT; i++) {
@@ -270,8 +257,6 @@ printf("open\n");
 
 int fs_close(int fd)
 {
-printf("close\n");
-	/* TODO: Phase 3 */
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
     return -1;
@@ -284,8 +269,6 @@ printf("close\n");
 
 int fs_stat(int fd)
 {
-printf("stat\n");
-	/* TODO: Phase 3 */
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
     return -1;
@@ -296,8 +279,6 @@ printf("stat\n");
 
 int fs_lseek(int fd, size_t offset)
 {
-	/* TODO: Phase 3 */
-  printf("lseek\n");
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
     return -1;
@@ -314,8 +295,6 @@ int fs_lseek(int fd, size_t offset)
 
 int fs_write(int fd, void *buf, size_t count)
 {
-	/* TODO: Phase 4 */
-  printf("write start, count: %d\n", (int)count);
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
     return -1;
@@ -328,11 +307,9 @@ int fs_write(int fd, void *buf, size_t count)
   int block_offset = open_files[fd].offset;
   int block_num = 0;
 
-  printf("initialized\n");
 
   //if no data yet
   if(block_idx == FAT_EOC){
-    printf("no data yet\n");
     // look for empty blocks
     for(int i = 1; i < super_block.data_blocks; i++){
       // add new block to chain
@@ -344,13 +321,11 @@ int fs_write(int fd, void *buf, size_t count)
       }
       // if no empty blocks in FAT
       if (i == super_block.data_blocks){
-        printf("no empty fat\n");
         return 0;
       }
     }
   }
 
-  printf("first made\n");
   // find block of offset
   while(block_offset >= BLOCK_SIZE){
     if(the_fat[block_idx] == FAT_EOC)
@@ -359,7 +334,6 @@ int fs_write(int fd, void *buf, size_t count)
     block_idx = the_fat[block_idx];
     block_num++;
   }
-  printf("offset found\n");
 
   // malloc block buffer
   void *block = (void*)malloc(BLOCK_SIZE);
@@ -368,7 +342,6 @@ int fs_write(int fd, void *buf, size_t count)
   while(num_written < count){
     // Read full block
     block_read(block_idx + super_block.data_index, block);
-      printf("read block%d\n",block_idx + super_block.data_index);
 
     //calculate how many bytes to copy
     int end = BLOCK_SIZE - 1;
@@ -378,11 +351,9 @@ int fs_write(int fd, void *buf, size_t count)
       copynum = count - num_written;
     }
 
-      printf("how many to copy\n");
     // copy from buffer
     memcpy((void*)(block + block_offset), (void*) (buf + num_written), copynum);
     num_written += copynum;
-      printf("memcpy\n");
     block_write(block_idx + super_block.data_index, block);
 
     // swap to next block
@@ -392,19 +363,16 @@ int fs_write(int fd, void *buf, size_t count)
 
     // test for if last block and needs to create new block
     if(the_fat[block_idx] == FAT_EOC && num_written != count){
-      printf("needs another block\n");
       // look for empty blocks
       for(int i = 1; i < super_block.data_blocks; i++){
         // add new block to chain
         if(the_fat[i] == 0){
-          printf("empty block found\n");
           the_fat[block_idx] = i;
           the_fat[i] = FAT_EOC;
           break;
         }
         // if no empty blocks in FAT
         if (i == super_block.data_blocks){
-          printf("no empty blocks\n");
           free(block);
           this_file->filesize = open_files[fd].offset;
           return num_written;
@@ -414,18 +382,14 @@ int fs_write(int fd, void *buf, size_t count)
 
     block_idx = the_fat[block_idx];
   }
-  printf("free\n");
   free(block);
   this_file->filesize = open_files[fd].offset;
 
-    printf("returning%d\n",num_written);
   return num_written;
 }
 
 int fs_read(int fd, void *buf, size_t count)
 {
-printf("read start\n");
-	/* TODO: Phase 4 */
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
     return -1;
