@@ -279,7 +279,7 @@ void thread_fs_write(void *arg){
 	struct stat st;
 	int written;
 	char *ptr;
-	int offset;
+	size_t offset;
 
 	if (t_arg->argc < 4)
 		die("Usage: <diskname> <host filename> <source filename> <offset>");
