@@ -367,8 +367,8 @@ int fs_write(int fd, void *buf, size_t count)
   // copy from blocks while still data to write
   while(num_written < count){
     // Read full block
-    block_read(block_idx + 2 + super_block.FAT_blocks,(void*) &block);
-      printf("read block\n");
+    block_read(block_idx + super_block.data_index,(void*) &block);
+      printf("read block%d\n",block_idx + super_block.data_index);
 
     //calculate how many bytes to copy
     int end = BLOCK_SIZE - 1;
@@ -383,7 +383,7 @@ int fs_write(int fd, void *buf, size_t count)
     memcpy((void*)(&block+block_offset), (void*) (&buf+num_written), copynum);
     num_written += copynum;
       printf("memcpy\n");
-    block_write(block_idx + 2 + super_block.FAT_blocks,(void*) &block);
+    block_write(block_idx + super_block.data_index,(void*) &block);
 
     // swap to next block
     open_files[fd].offset += copynum;
@@ -413,6 +413,7 @@ int fs_write(int fd, void *buf, size_t count)
 
     block_idx = the_fat[block_idx];
   }
+  printf("free\n");
   free(block);
 
     printf("returning%d\n",num_written);
@@ -453,7 +454,7 @@ printf("read start\n");
   // copy from blocks while still data to copy
   while(block_idx != FAT_EOC && num_read < count){
     // Read full block
-    block_read(block_idx + 2 + super_block.FAT_blocks,(void*) &block);
+    block_read(block_idx + super_block.data_index,(void*) &block);
 
     //calculate how many bytes to copy
     int end = BLOCK_SIZE - 1;
