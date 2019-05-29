@@ -88,6 +88,12 @@ int fs_mount(const char *diskname)
 
 int fs_umount(void)
 {
+  // Check if any files are open
+  for(int i = 0; i < FS_OPEN_MAX_COUNT; i++){
+    if(open_files[i] != -1){
+      return -1;
+    }
+  }
   //Write fat back to disk
   FAT buffer = (FAT)malloc(BLOCK_SIZE);
   for(int i = 1; i < super_block.root_index; i++){
