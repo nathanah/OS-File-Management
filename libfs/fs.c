@@ -308,6 +308,7 @@ int fs_lseek(int fd, size_t offset)
 int fs_write(int fd, void *buf, size_t count)
 {
 	/* TODO: Phase 4 */
+  printf("write start\n");
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
     return -1;
@@ -410,6 +411,7 @@ int fs_write(int fd, void *buf, size_t count)
 
 int fs_read(int fd, void *buf, size_t count)
 {
+printf("read start\n");
 	/* TODO: Phase 4 */
   // Checks if fd is in range and if file is not open
   if(fd < 0 || fd > FS_FILE_MAX_COUNT || open_files[fd].root_idx == -1){
