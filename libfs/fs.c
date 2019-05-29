@@ -313,9 +313,68 @@ int fs_write(int fd, void *buf, size_t count)
     return -1;
   }
 
+  int num_written = 0;
+  root_dir *this_file = &root_dir_array[open_files[fd].root_idx];
 
 
-  return 0;
+  // find block of offset
+  int block_idx = this_file->first_data_index;
+  int block_offset = open_files[fd].offset;
+  int block_num = 0;
+  while(block_offset > BLOCK_SIZE){
+    if(the_fat[block_idx] == FAT_EOC)
+      return 0;
+    block_offset -= BLOCK_SIZE;
+    block_idx = the_fat[block_idx];
+    block_num++;
+  }
+
+  // malloc block buffer
+  char *block = (char*)malloc(BLOCK_SIZE*sizeof(char));
+
+  // copy from blocks while still data to write
+  while(num_written < count){
+    // Read full block
+    block_read(block_idx ,(void*) &block);
+
+    //calculate how many bytes to copy
+    int end = BLOCK_SIZE;
+
+    int copynum = end - block_offset;
+    if(num_written + copynum < count){
+      copynum = count - num_written;
+    }
+
+    // copy from buffer
+    memcpy((void*)(&block+block_offset), (void*) (&buf+num_written), copynum);
+    num_written += copynum;
+
+    // swap to next block
+    open_files[fd].offset += copynum;
+    block_offset = 0;
+    block_num++;
+
+    // test for if last block and needs to create new block
+    if(the_fat[block_idx] == FAT_EOC){
+      // look for empty blocks
+      for(int i = 0; i < super_block.data_blocks; i++){
+        // add new block to chain
+        if(the_fat[i] == 0){
+          the_fat[block_idx] = i;
+          the_fat[i] = FAT_EOC;
+          break;
+        }
+        // if no empty blocks in FAT
+        if (i == super_block.data_blocks){
+          return num_written;
+        }
+      }
+    }
+
+    block_idx = the_fat[block_idx];
+  }
+
+  return num_written;
 }
 
 int fs_read(int fd, void *buf, size_t count)
@@ -355,7 +414,11 @@ int fs_read(int fd, void *buf, size_t count)
     if(the_fat[block_idx] == FAT_EOC){
       end = this_file->filesize - block_num * BLOCK_SIZE;
     }
+
     int copynum = end - block_offset;
+    if(num_read + copynum < count){
+      copynum = count - num_read;
+    }
 
     // copy to buffer
     memcpy((void*) (&buf+num_read), (void*)(&block+block_offset), copynum);
