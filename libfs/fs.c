@@ -320,11 +320,11 @@ int fs_write(int fd, void *buf, size_t count)
   int block_offset = open_files[fd].offset;
   int block_num = 0;
 
-  printf("initialized"\n");
+  printf("initialized\n");
 
   //if no data yet
   if(block_idx == FAT_EOC){
-    printf("no data yet"\n");
+    printf("no data yet\n");
     // look for empty blocks
     for(int i = 1; i < super_block.data_blocks; i++){
       // add new block to chain
@@ -336,13 +336,13 @@ int fs_write(int fd, void *buf, size_t count)
       }
       // if no empty blocks in FAT
       if (i == super_block.data_blocks){
-        printf("no empty fat"\n");
+        printf("no empty fat\n");
         return 0;
       }
     }
   }
 
-  printf("first made"\n");
+  printf("first made\n");
   // find block of offset
   while(block_offset >= BLOCK_SIZE){
     if(the_fat[block_idx] == FAT_EOC)
@@ -351,7 +351,7 @@ int fs_write(int fd, void *buf, size_t count)
     block_idx = the_fat[block_idx];
     block_num++;
   }
-  printf("offset found"\n");
+  printf("offset found\n");
 
   // malloc block buffer
   char *block = (char*)malloc(BLOCK_SIZE*sizeof(char));
@@ -360,7 +360,7 @@ int fs_write(int fd, void *buf, size_t count)
   while(num_written < count){
     // Read full block
     block_read(block_idx ,(void*) &block);
-      printf("read block"\n");
+      printf("read block\n");
 
     //calculate how many bytes to copy
     int end = BLOCK_SIZE - 1;
@@ -370,11 +370,11 @@ int fs_write(int fd, void *buf, size_t count)
       copynum = count - num_written;
     }
 
-      printf("how many to copy"\n");
+      printf("how many to copy\n");
     // copy from buffer
     memcpy((void*)(&block+block_offset), (void*) (&buf+num_written), copynum);
     num_written += copynum;
-      printf("memcpy"\n");
+      printf("memcpy\n");
 
     // swap to next block
     open_files[fd].offset += copynum;
@@ -383,19 +383,19 @@ int fs_write(int fd, void *buf, size_t count)
 
     // test for if last block and needs to create new block
     if(the_fat[block_idx] == FAT_EOC && num_written != count){
-      printf("needs another block"\n");
+      printf("needs another block\n");
       // look for empty blocks
       for(int i = 1; i < super_block.data_blocks; i++){
         // add new block to chain
         if(the_fat[i] == 0){
-          printf("empty block found"\n");
+          printf("empty block found\n");
           the_fat[block_idx] = i;
           the_fat[i] = FAT_EOC;
           break;
         }
         // if no empty blocks in FAT
         if (i == super_block.data_blocks){
-          printf("no empty blocks"\n");
+          printf("no empty blocks\n");
           return num_written;
         }
       }
@@ -404,7 +404,7 @@ int fs_write(int fd, void *buf, size_t count)
     block_idx = the_fat[block_idx];
   }
 
-    printf("returning"\n");
+    printf("returning\n");
   return num_written;
 }
 
