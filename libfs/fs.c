@@ -412,6 +412,7 @@ int fs_write(int fd, void *buf, size_t count)
 
     block_idx = the_fat[block_idx];
   }
+  free(block);
 
     printf("returning%d\n",num_written);
   return num_written;
@@ -474,6 +475,7 @@ printf("read start\n");
     block_idx = the_fat[block_idx];
     block_num++;
   }
+  free(block);
 
   return num_read;
 }
