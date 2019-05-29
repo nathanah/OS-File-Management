@@ -362,7 +362,7 @@ int fs_write(int fd, void *buf, size_t count)
   printf("offset found\n");
 
   // malloc block buffer
-  char *block = (char*)malloc(BLOCK_SIZE*sizeof(char));
+  char *block = (char*)malloc(BLOCK_SIZE);
 
   // copy from blocks while still data to write
   while(num_written < count){
@@ -405,6 +405,7 @@ int fs_write(int fd, void *buf, size_t count)
         // if no empty blocks in FAT
         if (i == super_block.data_blocks){
           printf("no empty blocks\n");
+          free(block);
           return num_written;
         }
       }
