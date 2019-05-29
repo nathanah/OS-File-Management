@@ -278,8 +278,8 @@ void thread_fs_write(void *arg){
 	int fd, fd2, fs_fd;
 	struct stat st;
 	int written;
-	int offset;
 	char *ptr;
+	int offset;
 
 	if (t_arg->argc < 4)
 		die("Usage: <diskname> <host filename> <source filename> <offset>");
@@ -287,7 +287,15 @@ void thread_fs_write(void *arg){
 	diskname = t_arg->argv[0];
 	filename = t_arg->argv[1];
 	source   = t_arg->argv[2];
-	offset = strtol(t_arg->argv[3], &ptr, 10);
+	long conv = strtol(t_arg->argv[3], &ptr, 10);
+
+	if (errno != 0 || *p != '\0' || conv > INT_MAX) {
+			die("Offset NaN");
+	} else {
+    // No error
+    offset = conv;
+    printf("%d\n", num);
+	}
 
 	/* Open file on host computer */
 	fd = open(filename, O_RDONLY);
