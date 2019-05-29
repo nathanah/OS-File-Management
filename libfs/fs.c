@@ -362,12 +362,12 @@ int fs_write(int fd, void *buf, size_t count)
   printf("offset found\n");
 
   // malloc block buffer
-  char *block = (char*)malloc(BLOCK_SIZE*sizeof(char));
+  char *block = (void*)malloc(BLOCK_SIZE*sizeof(char));
 
   // copy from blocks while still data to write
   while(num_written < count){
     // Read full block
-    block_read(block_idx ,(void*) &block);
+    block_read(block_idx , &block);
       printf("read block\n");
 
     //calculate how many bytes to copy
@@ -383,7 +383,7 @@ int fs_write(int fd, void *buf, size_t count)
     memcpy((void*)(&block+block_offset), (void*) (&buf+num_written), copynum);
     num_written += copynum;
       printf("memcpy\n");
-    block_write(block_idx,(void*) &block);
+    block_write(block_idx, &block);
 
     // swap to next block
     open_files[fd].offset += copynum;
