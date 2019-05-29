@@ -327,7 +327,7 @@ void thread_fs_write(void *arg){
 	}
 
 
-	if(!fs_lseek(fd, offset)){
+	if(fs_lseek(fs_fd, offset)){
 		fs_umount();
 		printf("%ld", offset);
 		die(" :Invalid offset");
