@@ -321,7 +321,8 @@ void thread_fs_write(void *arg){
 
 	if(fs_lseek(fd, offset)){
 		fs_umount();
-		die("Invalid offset: "+ (int) offset);
+		printf("%d", offset);
+		die(paste(" :Invalid offset");
 	}
 
 	written = fs_write(fs_fd, buf, st.st_size-1);
