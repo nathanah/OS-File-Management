@@ -289,7 +289,7 @@ void thread_fs_write(void *arg){
 	source   = t_arg->argv[2];
 	long conv = strtol(t_arg->argv[3], &ptr, 10);
 
-	if (*p != '\0' || conv > INT_MAX) {
+	if (*ptr != '\0' || conv > INT_MAX) {
 			die("Offset NaN");
 	} else {
     // No error
