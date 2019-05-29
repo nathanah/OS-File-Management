@@ -5,12 +5,15 @@ lib := libfs.a
 parts := \
 	disk.o \
 	fs.o
+
+CFLAGS := -c -Wall -Werror
+
 src := $(patsubst %.o,%.c,$(parts))
 
 all: $(lib) $(parts)
 
 $(parts): $(src)
-	gcc -c -Wall -Werror $(src)
+	gcc $(CFLAGS) $(src)
 
 $(lib): $(parts)
 	ar rcs $(lib) $(parts)
