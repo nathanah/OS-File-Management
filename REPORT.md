@@ -26,3 +26,11 @@ For `stat()` and `lseek()`, an extra corner case we checked was whether or not a
 
 
 # Phase 4
+
+For our `read()`, we initially do error checking on the file descriptor. We then take the file descriptor's offset to find which block it is located in and the found block's offset. We then go into our while loop which reads the block and copies that data within the block into a buffer. We then iterate to the next block until our count has been reached or the EOF is reached. 
+
+For `write()`, most of the process is the same, but we have to include adding blocks to the file. We have to initially assign a block for empty files, and we have to assign blocks at the EOF if our data has filled up its last block. 
+
+
+# Testing for Phase 4
+
