@@ -383,7 +383,9 @@ int fs_write(int fd, void *buf, size_t count)
     block_idx = the_fat[block_idx];
   }
   free(block);
-  this_file->filesize = open_files[fd].offset;
+  if(open_files[fd].offset > this_file->filesize){
+    this_file->filesize = open_files[fd].offset;
+  }
 
   return num_written;
 }
