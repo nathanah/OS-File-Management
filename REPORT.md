@@ -32,5 +32,9 @@ For our `read()`, we initially do error checking on the file descriptor. We then
 For `write()`, most of the process is the same, but we have to include adding blocks to the file. We have to initially assign a block for empty files, and we have to assign blocks at the EOF if our data has filled up its last block. 
 
 
-# Testing for Phase 4
+# Testing for Phase 3-4
 
+We created `thread_fs_write()` in the test file itself in which we can add files as well as write files to the disk. 
+More specifically our write function also allows us to write files to a certain offset of other files and ensures that the correct offset is being used.  
+Using the tester, we are able to see whether or not the data_blks are allocated correctly and if the size of the files are correct corresponding to what is contained in it.
+When `cat()` is called, it ensures that our read is done accordingly as well. 
