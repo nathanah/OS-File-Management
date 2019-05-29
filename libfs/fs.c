@@ -376,6 +376,7 @@ int fs_write(int fd, void *buf, size_t count)
     memcpy((void*)(&block+block_offset), (void*) (&buf+num_written), copynum);
     num_written += copynum;
       printf("memcpy\n");
+    block_write(block_idx,(void*) &block);
 
     // swap to next block
     open_files[fd].offset += copynum;
