@@ -294,7 +294,6 @@ void thread_fs_write(void *arg){
 	} else {
     // No error
     offset = conv;
-    printf("%ld\n", offset);
 	}
 
 	/* Open file on host computer */
@@ -333,7 +332,7 @@ void thread_fs_write(void *arg){
 		die(" :Invalid offset");
 	}
 
-	written = fs_write(fs_fd, buf, st.st_size-1);
+	written = fs_write(fs_fd, buf, st.st_size);
 
 
 	if (fs_close(fs_fd)) {
