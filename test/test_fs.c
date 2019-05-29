@@ -318,7 +318,11 @@ void thread_fs_write(void *arg){
 		die("Cannot open file");
 	}
 
-	fs_lseek(fd, offset);
+
+	if(fs_lseek(fd, offset)){
+		fs_umount();
+		die("Invalid offset");
+	}
 
 	written = fs_write(fs_fd, buf, st.st_size-1);
 
