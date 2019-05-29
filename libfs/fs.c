@@ -374,7 +374,7 @@ int fs_write(int fd, void *buf, size_t count)
     int end = BLOCK_SIZE - 1;
 
     int copynum = end - block_offset;
-    if(num_written + copynum < count){
+    if(num_written + copynum > count){
       copynum = count - num_written;
     }
 
