@@ -275,7 +275,7 @@ size_t get_argv(char *argv)
 void thread_fs_write(void *arg){
 	struct thread_arg *t_arg = arg;
 	char *diskname, *filename, *source, *buf;
-	int fd, fs_fd;
+	int fd, fd2, fs_fd;
 	struct stat st;
 	int written;
 	int offset;
@@ -318,7 +318,7 @@ void thread_fs_write(void *arg){
 		die("Cannot open file");
 	}
 
-	fs_lseek(offset);
+	fs_lseek(fd, offset);
 
 	written = fs_write(fs_fd, buf, st.st_size);
 
