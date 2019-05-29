@@ -289,12 +289,12 @@ void thread_fs_write(void *arg){
 	source   = t_arg->argv[2];
 	long conv = strtol(t_arg->argv[3], &ptr, 10);
 
-	if (errno != 0 || *p != '\0' || conv > INT_MAX) {
+	if (*p != '\0' || conv > INT_MAX) {
 			die("Offset NaN");
 	} else {
     // No error
     offset = conv;
-    printf("%d\n", num);
+    printf("%d\n", offset);
 	}
 
 	/* Open file on host computer */
