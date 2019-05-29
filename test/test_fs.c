@@ -208,6 +208,7 @@ void thread_fs_add(void *arg)
 		die("Cannot open file");
 	}
 
+	printf("Before written\n");
 	written = fs_write(fs_fd, buf, st.st_size);
 
 	printf("passed written\n");
