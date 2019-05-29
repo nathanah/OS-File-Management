@@ -210,6 +210,8 @@ void thread_fs_add(void *arg)
 
 	written = fs_write(fs_fd, buf, st.st_size);
 
+	printf("passed written\n");
+
 	if (fs_close(fs_fd)) {
 		fs_umount();
 		die("Cannot close file");
