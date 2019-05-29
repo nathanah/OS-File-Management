@@ -284,7 +284,7 @@ int fs_lseek(int fd, size_t offset)
     return -1;
   }
   // Checks if offset is out of bounds
-  if(offset > root_dir_array[open_files[fd].root_idx].filesize){
+  if(offset >= root_dir_array[open_files[fd].root_idx].filesize){
     return -1;
   }
 
