@@ -281,7 +281,7 @@ void thread_fs_write(void *arg){
 	int offset;
 	char *ptr;
 
-	if (t_arg->argc < 2)
+	if (t_arg->argc < 4)
 		die("Usage: <diskname> <host filename> <source filename> <offset>");
 
 	diskname = t_arg->argv[0];
@@ -320,7 +320,7 @@ void thread_fs_write(void *arg){
 
 	fs_lseek(fd, offset);
 
-	written = fs_write(fs_fd, buf, st.st_size);
+	written = fs_write(fs_fd, buf, st.st_size-1);
 
 
 	if (fs_close(fs_fd)) {
